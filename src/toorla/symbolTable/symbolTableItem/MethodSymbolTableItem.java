@@ -10,6 +10,7 @@ public class MethodSymbolTableItem  extends SymbolTableItem {
     private String name;
     private Type methodType;
     private ArrayList <Type> parameters;
+    private Integer counter;
 
     public MethodSymbolTableItem(String name,Type methodType,ArrayList <Type> parameters) {
         this.name=name;
@@ -29,4 +30,11 @@ public class MethodSymbolTableItem  extends SymbolTableItem {
         return parameters;
     }
 
+    public void increaseCounter() {
+        counter += 1;
+    }
+
+    public Integer getCounter() {
+        return counter;
+    }
 }

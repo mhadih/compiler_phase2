@@ -6,6 +6,7 @@ import toorla.ast.statement.Statement;
 import toorla.visitor.Visitor;
 
 public class LocalVarDef extends Statement {
+    private Integer index;
     private Identifier localVarName;
     private Expression initialValue;
     public LocalVarDef( Identifier localVarName , Expression initialValue )
@@ -25,9 +26,11 @@ public class LocalVarDef extends Statement {
         return initialValue;
     }
 
-
     public Identifier getLocalVarName() {
         return localVarName;
     }
 
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
 }

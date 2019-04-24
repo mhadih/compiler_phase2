@@ -18,10 +18,14 @@ import toorla.ast.statement.localVarStats.LocalVarsDefinitions;
 import toorla.ast.statement.returnStatement.Return;
 import toorla.symbolTable.SymbolTable;
 import toorla.visitor.Visitor;
+import toorla.symbolTable.*;
+import toorla.symbolTable.symbolTableItem.varItems.*;
+
 
 public class NameAnalayzer implements Visitor<Void> {
     public SymbolTable symbolTable;
     public Program AST;
+    private Integer counter;
 
     public void NameAnalayzer(Program AST) {
         this.AST = AST;
@@ -192,6 +196,7 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(NewArray newArray) {
+
         newArray.getLength().accept(this);
         return null;
     }
@@ -235,6 +240,15 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(LocalVarDef localVarDef) {
+        try{
+            LocalVariableSymbolTableItem variable = new LocalVariableSymbolTableItem(localVarDef.getLocalVarName().getName());
+            localVarDef.setIndex(counter);
+            counter +=1;
+        }
+        catch{
+
+                //
+        }
         localVarDef.getLocalVarName().accept(this);
         localVarDef.getInitialValue().accept(this);
         return null;

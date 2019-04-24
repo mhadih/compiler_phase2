@@ -5,11 +5,11 @@ import toorla.types.AnonymousType;
 
 public class LocalVariableSymbolTableItem extends VarSymbolTableItem {
     private Type varType;
-    private int index;
-    public LocalVariableSymbolTableItem(String name , int index ){
+//    private int index;
+    public LocalVariableSymbolTableItem(String name){
         this.name=name;
         this.varType = new AnonymousType();
-        this.index = index;
+//        this.index = index;
     }
 
 
@@ -18,9 +18,9 @@ public class LocalVariableSymbolTableItem extends VarSymbolTableItem {
         return name;
     }
 
-    public int getIndex() {
-        return index;
-    }
+//    public int getIndex() {
+//        return index;
+//    }
 
     public Type getVarType() {
         return varType;

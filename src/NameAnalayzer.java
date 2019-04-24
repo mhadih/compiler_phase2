@@ -17,6 +17,8 @@ import toorla.ast.statement.localVarStats.LocalVarDef;
 import toorla.ast.statement.localVarStats.LocalVarsDefinitions;
 import toorla.ast.statement.returnStatement.Return;
 import toorla.symbolTable.SymbolTable;
+import toorla.symbolTable.exceptions.ItemAlreadyExistsException;
+import toorla.symbolTable.symbolTableItem.ClassSymbolTableItem;
 import toorla.visitor.Visitor;
 import toorla.symbolTable.*;
 import toorla.symbolTable.symbolTableItem.varItems.*;
@@ -27,8 +29,11 @@ public class NameAnalayzer implements Visitor<Void> {
     public Program AST;
     private Integer counter;
 
+
     public void NameAnalayzer(Program AST) {
         this.AST = AST;
+        this.symbolTable.root = symbolTable;
+        this.symbolTable.top = symbolTable;
     }
 
     @Override
@@ -242,12 +247,13 @@ public class NameAnalayzer implements Visitor<Void> {
     public Void visit(LocalVarDef localVarDef) {
         try{
             LocalVariableSymbolTableItem variable = new LocalVariableSymbolTableItem(localVarDef.getLocalVarName().getName());
+            symbolTable.top.put(variable);
             localVarDef.setIndex(counter);
             counter +=1;
         }
-        catch{
+        catch(ItemAlreadyExistsException exc){
 
-                //
+            //////////
         }
         localVarDef.getLocalVarName().accept(this);
         localVarDef.getInitialValue().accept(this);
@@ -268,6 +274,15 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(ClassDeclaration classDeclaration) {
+        try{
+            ClassSymbolTableItem Class = new ClassSymbolTableItem(classDeclaration.getName().getName());
+            SymbolTable classTable = new SymbolTable();
+            SymbolTable.push(classTable);
+
+        }
+        catch{
+
+        }
         classDeclaration.getName().accept(this);
         if (classDeclaration.getParentName().getName() != null) {
             classDeclaration.getParentName().accept(this);

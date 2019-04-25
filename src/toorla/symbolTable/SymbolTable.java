@@ -67,6 +67,10 @@ public class SymbolTable {
         }
     }
 
+    public void setPreSymbolTable(SymbolTable preSymbolTable) {
+        this.pre = preSymbolTable;
+    }
+
     public SymbolTable getPreSymbolTable() {
         return pre;
     }

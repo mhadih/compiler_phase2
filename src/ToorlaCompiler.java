@@ -10,7 +10,6 @@ public class ToorlaCompiler {
         CommonTokenStream tokenStream = new CommonTokenStream( toorlaLexer );
         ToorlaParser toorlaParser = new ToorlaParser( tokenStream );
         Program toorlaASTCode = toorlaParser.program().mProgram;
-        ‍
         Visitor<Void> treePrinter = new TreePrinter();
         toorlaASTCode.accept( treePrinter );
     }

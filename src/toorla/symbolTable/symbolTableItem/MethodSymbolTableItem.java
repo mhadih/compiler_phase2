@@ -1,5 +1,6 @@
 package toorla.symbolTable.symbolTableItem;
 
+import toorla.symbolTable.SymbolTable;
 import toorla.symbolTable.symbolTableItem.varItems.VarSymbolTableItem;
 import toorla.types.Type;
 
@@ -10,6 +11,7 @@ public class MethodSymbolTableItem  extends SymbolTableItem {
     private String name;
     private Type methodType;
     private ArrayList <Type> parameters;
+    public SymbolTable symbolTable = new SymbolTable();
 
     public MethodSymbolTableItem(String name,Type methodType,ArrayList <Type> parameters) {
         this.name=name;

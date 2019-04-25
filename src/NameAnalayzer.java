@@ -276,11 +276,12 @@ public class NameAnalayzer implements Visitor<Void> {
     public Void visit(ClassDeclaration classDeclaration) {
         try{
             ClassSymbolTableItem Class = new ClassSymbolTableItem(classDeclaration.getName().getName());
+            symbolTable.top.put(Class);
             SymbolTable classTable = new SymbolTable();
             SymbolTable.push(classTable);
 
         }
-        catch{
+        catch(ItemAlreadyExistsException exc){
 
         }
         classDeclaration.getName().accept(this);
@@ -294,6 +295,18 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(EntryClassDeclaration entryClassDeclaration) {
+
+        try{
+            ClassSymbolTableItem entryClass = new ClassSymbolTableItem(entryClassDeclaration.getName().getName());
+            symbolTable.top.put(entryClass);
+            SymbolTable classTable = new SymbolTable();
+            SymbolTable.push(classTable);
+
+        }
+        catch(ItemAlreadyExistsException exc){
+
+        }
+
         entryClassDeclaration.getName().accept(this);
         if (entryClassDeclaration.getParentName().getName() != null) {
             entryClassDeclaration.getParentName().accept(this);

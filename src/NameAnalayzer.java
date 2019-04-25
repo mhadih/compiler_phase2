@@ -354,6 +354,8 @@ public class NameAnalayzer implements Visitor<Void> {
         try {
             LocalVariableSymbolTableItem parameter = new LocalVariableSymbolTableItem(parameterDeclaration.getIdentifier().getName(), parameterDeclaration.getType());
             symbolTable.top.put(parameter);
+            parameterDeclaration.setIndex(counter);
+            counter +=1;
         }
         catch(ItemAlreadyExistsException exception) {
             System.out.println("Error:Line:" + parameterDeclaration.line + ":Redefinition of Local Variable" +  parameterDeclaration.getIdentifier().getName() + "in current scope");

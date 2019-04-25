@@ -19,10 +19,13 @@ import toorla.ast.statement.returnStatement.Return;
 import toorla.symbolTable.SymbolTable;
 import toorla.symbolTable.exceptions.ItemAlreadyExistsException;
 import toorla.symbolTable.symbolTableItem.ClassSymbolTableItem;
-import toorla.symbolTable.symbolTableItem.FieldSymbolTableItem;
+import toorla.symbolTable.symbolTableItem.MethodSymbolTableItem;
+import toorla.types.Type;
 import toorla.visitor.Visitor;
 import toorla.symbolTable.*;
 import toorla.symbolTable.symbolTableItem.varItems.*;
+
+import java.util.ArrayList;
 
 
 public class NameAnalayzer implements Visitor<Void> {
@@ -252,7 +255,7 @@ public class NameAnalayzer implements Visitor<Void> {
             localVarDef.setIndex(counter);
             counter +=1;
         }
-        catch(ItemAlreadyExistsException exc){
+        catch(ItemAlreadyExistsException exception){
 
             //////////
         }
@@ -347,6 +350,17 @@ public class NameAnalayzer implements Visitor<Void> {
     @Override
     public Void visit(MethodDeclaration methodDeclaration) {
         methodDeclaration.getName().accept(this);
+        counter = 0;
+        ArrayList<Type> paramType = new ArrayList<>();
+        for (ParameterDeclaration pd : methodDeclaration.getArgs()) {
+            paramType.add(pd.getType());
+        }
+        try {
+            MethodSymbolTableItem method = new MethodSymbolTableItem(methodDeclaration.getName().getName(), methodDeclaration.getReturnType(), paramType);
+            symbolTable.top.put(method);
+        } catch (ItemAlreadyExistsException exception) {
+
+        }
         for (ParameterDeclaration pd : methodDeclaration.getArgs()) {
             pd.accept(this);
         }

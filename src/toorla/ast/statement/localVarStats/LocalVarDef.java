@@ -30,6 +30,10 @@ public class LocalVarDef extends Statement {
         return localVarName;
     }
 
+    public Integer getIndex() {
+        return index;
+    }
+
     public void setIndex(Integer index) {
         this.index = index;
     }

@@ -25,4 +25,8 @@ public class ParameterDeclaration extends TypedVariableDeclaration {
     public void  setIndex(Integer index) {
         this.index = index;
     }
+
+    public Integer getIndex() {
+        return index;
+    }
 }

@@ -46,6 +46,7 @@ public class NameAnalayzer implements Visitor<Void> {
         SymbolTable.root = symbolTable;
         SymbolTable.push(symbolTable);
         blockCnt = 0;
+        error = new ArrayList<>();
         hasError = false;
     }
 
@@ -354,7 +355,10 @@ public class NameAnalayzer implements Visitor<Void> {
     @Override
     public Void visit(FieldDeclaration fieldDeclaration) {
         if (fieldDeclaration.getIdentifier().getName().equals("length")) {
-            System.out.println("Error:line:" + fieldDeclaration.line + ":Definition of length as field of a class");
+//            System.out.println("Error:line:" + fieldDeclaration.line + ":Definition of length as field of a class");
+            Pair <Integer,String> err =
+                    new Pair<Integer,String>(fieldDeclaration.line,"Error:line:" + fieldDeclaration.line + ":Definition of length as field of a class");
+            error.add(err);
         }
         else {
             try {

@@ -12,6 +12,10 @@ public class LocalVariableSymbolTableItem extends VarSymbolTableItem {
 //        this.index = index;
     }
 
+    public LocalVariableSymbolTableItem(String name,Type varType){
+        this.name = name;
+        this.varType = varType;
+    }
 
     @Override
     public String getKey() {

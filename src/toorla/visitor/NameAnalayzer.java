@@ -1,5 +1,6 @@
 package toorla.visitor;
 
+//import jdk.internal.util.xml.impl.Pair;
 import toorla.ast.Program;
 import toorla.ast.declaration.classDecs.ClassDeclaration;
 import toorla.ast.declaration.classDecs.EntryClassDeclaration;
@@ -28,7 +29,7 @@ import toorla.types.Type;
 import toorla.visitor.Visitor;
 import toorla.symbolTable.*;
 import toorla.symbolTable.symbolTableItem.varItems.*;
-
+import javafx.util.Pair;
 import java.util.ArrayList;
 
 
@@ -37,6 +38,7 @@ public class NameAnalayzer implements Visitor<Void> {
     private Integer counter;
     private Integer blockCnt;
     public Boolean hasError;
+    public ArrayList< Pair <Integer , String > > error;
 
 
     public NameAnalayzer() {
@@ -273,7 +275,10 @@ public class NameAnalayzer implements Visitor<Void> {
             counter += 1;
         }
         catch(ItemAlreadyExistsException exception){
-            System.out.println("Error:Line:" + localVarDef.line + ":Redefinition of Local Variable " +  localVarDef.getLocalVarName().getName() + " in current scope");
+//            System.out.println("Error:Line:" + localVarDef.line + ":Redefinition of Local Variable " +  localVarDef.getLocalVarName().getName() + " in current scope");
+            Pair <Integer,String> err =
+                        new Pair<Integer,String>(localVarDef.line,"Error:Line:" + localVarDef.line + ":Redefinition of Local Variable " +  localVarDef.getLocalVarName().getName() + " in current scope");
+            error.add(err);
             hasError = true;
         }
         localVarDef.getLocalVarName().accept(this);
@@ -303,7 +308,10 @@ public class NameAnalayzer implements Visitor<Void> {
 
         }
         catch(ItemAlreadyExistsException exception){
-            System.out.println("Error:Line:" + classDeclaration.line + ":Redefinition of Class " + classDeclaration.getName());
+//            System.out.println("Error:Line:" + classDeclaration.line + ":Redefinition of Class " + classDeclaration.getName());
+            Pair <Integer,String> err =
+                    new Pair<Integer,String>(classDeclaration.line,"Error:Line:" + classDeclaration.line + ":Redefinition of Class " + classDeclaration.getName());
+            error.add(err);
             hasError = true;
         }
         classDeclaration.getName().accept(this);
@@ -326,7 +334,10 @@ public class NameAnalayzer implements Visitor<Void> {
             SymbolTable.push(newClass.symbolTable);
         }
         catch(ItemAlreadyExistsException exception){
-            System.out.println("Error:Line:" + entryClassDeclaration.line + ":Redefinition of Class " + entryClassDeclaration.getName());
+//            System.out.println("Error:Line:" + entryClassDeclaration.line + ":Redefinition of Class " + entryClassDeclaration.getName());
+            Pair <Integer,String> err =
+                    new Pair<Integer,String>(entryClassDeclaration.line,"Error:Line:" + entryClassDeclaration.line + ":Redefinition of Class " + entryClassDeclaration.getName());
+            error.add(err);
             hasError = true;
         }
 
@@ -350,7 +361,10 @@ public class NameAnalayzer implements Visitor<Void> {
                 FieldSymbolTableItem field = new FieldSymbolTableItem(fieldDeclaration.getIdentifier().getName(), fieldDeclaration.getType());
                 SymbolTable.top.put(field);
             } catch (ItemAlreadyExistsException exception) {
-                System.out.println("Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
+//                System.out.println("Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
+                Pair <Integer,String> err =
+                        new Pair<Integer,String>(fieldDeclaration.line,"Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
+                error.add(err);
                 hasError = true;
             }
         }
@@ -367,7 +381,10 @@ public class NameAnalayzer implements Visitor<Void> {
             counter +=1;
         }
         catch(ItemAlreadyExistsException exception) {
-            System.out.println("Error:Line:" + parameterDeclaration.line + ":Redefinition of Local Variable" +  parameterDeclaration.getIdentifier().getName() + "in current scope");
+//            System.out.println("Error:Line:" + parameterDeclaration.line + ":Redefinition of Local Variable" +  parameterDeclaration.getIdentifier().getName() + "in current scope");
+            Pair <Integer,String> err =
+                    new Pair<Integer,String>(parameterDeclaration.line,"Error:Line:" + parameterDeclaration.line + ":Redefinition of Local Variable" +  parameterDeclaration.getIdentifier().getName() + "in current scope");
+            error.add(err);
             hasError = true;
         }
         parameterDeclaration.getIdentifier().accept(this);
@@ -388,7 +405,10 @@ public class NameAnalayzer implements Visitor<Void> {
             method.symbolTable.setPreSymbolTable(SymbolTable.top);
             SymbolTable.push(method.symbolTable);
         } catch (ItemAlreadyExistsException exception) {
-            System.out.println("Error:Line:" + methodDeclaration.line + ":Redefinition of Field " + methodDeclaration.getName().getName());
+//            System.out.println("Error:Line:" + methodDeclaration.line + ":Redefinition of Field " + methodDeclaration.getName().getName());
+            Pair <Integer,String> err =
+                    new Pair<Integer,String>(methodDeclaration.line,"Error:Line:" + methodDeclaration.line + ":Redefinition of Field " + methodDeclaration.getName().getName());
+            error.add(err);
             hasError = true;
         }
         for (ParameterDeclaration pd : methodDeclaration.getArgs()) {

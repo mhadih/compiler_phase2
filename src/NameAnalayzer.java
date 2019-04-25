@@ -285,7 +285,7 @@ public class NameAnalayzer implements Visitor<Void> {
             SymbolTable.push(classTable);
 
         }
-        catch(ItemAlreadyExistsException exc){
+        catch(ItemAlreadyExistsException exception){
 
         }
         classDeclaration.getName().accept(this);
@@ -307,7 +307,7 @@ public class NameAnalayzer implements Visitor<Void> {
             SymbolTable.push(classTable);
 
         }
-        catch(ItemAlreadyExistsException exc){
+        catch(ItemAlreadyExistsException exception){
 
         }
 
@@ -326,7 +326,7 @@ public class NameAnalayzer implements Visitor<Void> {
             FieldSymbolTableItem field = new FieldSymbolTableItem(fieldDeclaration.getIdentifier().getName(),fieldDeclaration.getType());
             symbolTable.top.put(field);
         }
-        catch(ItemAlreadyExistsException exc) {
+        catch(ItemAlreadyExistsException exception) {
 
         }
 
@@ -340,7 +340,7 @@ public class NameAnalayzer implements Visitor<Void> {
             LocalVariableSymbolTableItem parameter = new LocalVariableSymbolTableItem(parameterDeclaration.getIdentifier().getName(),parameterDeclaration.getType());
             symbolTable.top.put(parameter);
         }
-        catch(ItemAlreadyExistsException exc) {
+        catch(ItemAlreadyExistsException exception) {
 
         }
         parameterDeclaration.getIdentifier().accept(this);

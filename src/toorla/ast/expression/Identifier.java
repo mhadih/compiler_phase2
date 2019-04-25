@@ -3,7 +3,9 @@ package toorla.ast.expression;
 import toorla.visitor.Visitor;
 
 public class Identifier extends Expression {
+    private Integer index;
     private String name;
+
 
     public Identifier(String name) {
         this.name = name;
@@ -22,5 +24,13 @@ public class Identifier extends Expression {
         if( name != null )
             return "(Identifier," + name + ")";
         else return "(Identifier,Dummy)";
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 }

@@ -19,6 +19,7 @@ import toorla.ast.statement.returnStatement.Return;
 import toorla.symbolTable.SymbolTable;
 import toorla.symbolTable.exceptions.ItemAlreadyExistsException;
 import toorla.symbolTable.symbolTableItem.ClassSymbolTableItem;
+import toorla.symbolTable.symbolTableItem.FieldSymbolTableItem;
 import toorla.visitor.Visitor;
 import toorla.symbolTable.*;
 import toorla.symbolTable.symbolTableItem.varItems.*;
@@ -318,6 +319,14 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(FieldDeclaration fieldDeclaration) {
+        try {
+            FieldSymbolTableItem field = new FieldSymbolTableItem(fieldDeclaration.getIdentifier().getName(),fieldDeclaration.getType());
+            symbolTable.top.put(field);
+        }
+        catch(ItemAlreadyExistsException exc) {
+
+        }
+
         fieldDeclaration.getIdentifier().accept(this);
         return null;
     }

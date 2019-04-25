@@ -333,6 +333,13 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(ParameterDeclaration parameterDeclaration) {
+        try {
+            LocalVariableSymbolTableItem parameter = new LocalVariableSymbolTableItem(parameterDeclaration.getIdentifier().getName(),parameterDeclaration.getType());
+            symbolTable.top.put(parameter);
+        }
+        catch(ItemAlreadyExistsException exc) {
+
+        }
         parameterDeclaration.getIdentifier().accept(this);
         return null;
     }

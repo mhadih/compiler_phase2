@@ -1,6 +1,5 @@
 package toorla.visitor;
 
-//import jdk.internal.util.xml.impl.Pair;
 import toorla.ast.Program;
 import toorla.ast.declaration.classDecs.ClassDeclaration;
 import toorla.ast.declaration.classDecs.EntryClassDeclaration;
@@ -41,12 +40,12 @@ public class NameAnalayzer implements Visitor<Void> {
     public ArrayList< Pair <Integer , String > > error;
 
 
-    public NameAnalayzer() {
+    public NameAnalayzer(ArrayList< Pair <Integer , String > > error) {
         symbolTable = new SymbolTable();
         SymbolTable.root = symbolTable;
         SymbolTable.push(symbolTable);
         blockCnt = 0;
-        error = new ArrayList<>();
+        this.error = error;
         hasError = false;
     }
 
@@ -355,10 +354,10 @@ public class NameAnalayzer implements Visitor<Void> {
     @Override
     public Void visit(FieldDeclaration fieldDeclaration) {
         if (fieldDeclaration.getIdentifier().getName().equals("length")) {
-//            System.out.println("Error:line:" + fieldDeclaration.line + ":Definition of length as field of a class");
             Pair <Integer,String> err =
-                    new Pair<Integer,String>(fieldDeclaration.line,"Error:line:" + fieldDeclaration.line + ":Definition of length as field of a class");
+                    new Pair<>(fieldDeclaration.line, "Error:line:" + fieldDeclaration.line + ":Definition of length as field of a class");
             error.add(err);
+            hasError = true;
         }
         else {
             try {
@@ -367,7 +366,7 @@ public class NameAnalayzer implements Visitor<Void> {
             } catch (ItemAlreadyExistsException exception) {
 //                System.out.println("Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
                 Pair <Integer,String> err =
-                        new Pair<Integer,String>(fieldDeclaration.line,"Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
+                        new Pair<>(fieldDeclaration.line, "Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
                 error.add(err);
                 hasError = true;
             }
@@ -398,7 +397,7 @@ public class NameAnalayzer implements Visitor<Void> {
     @Override
     public Void visit(MethodDeclaration methodDeclaration) {
         methodDeclaration.getName().accept(this);
-        counter = 0;
+        counter = 1;
         ArrayList<Type> paramType = new ArrayList<>();
         for (ParameterDeclaration pd : methodDeclaration.getArgs()) {
             paramType.add(pd.getType());
@@ -409,9 +408,8 @@ public class NameAnalayzer implements Visitor<Void> {
             method.symbolTable.setPreSymbolTable(SymbolTable.top);
             SymbolTable.push(method.symbolTable);
         } catch (ItemAlreadyExistsException exception) {
-//            System.out.println("Error:Line:" + methodDeclaration.line + ":Redefinition of Field " + methodDeclaration.getName().getName());
             Pair <Integer,String> err =
-                    new Pair<Integer,String>(methodDeclaration.line,"Error:Line:" + methodDeclaration.line + ":Redefinition of Field " + methodDeclaration.getName().getName());
+                    new Pair<Integer,String>(methodDeclaration.line,"Error:Line:" + methodDeclaration.line + ":Redefinition of method " + methodDeclaration.getName().getName());
             error.add(err);
             hasError = true;
         }

@@ -213,7 +213,7 @@ public class TreePrinter implements Visitor<Void> {
     public Void visit(Identifier identifier) {
 //        System.out.print(identifier);
         if (identifier.getIndex() != null)
-            System.out.println("(Identifier," + identifier.getName() + "_" + identifier.getIndex());
+            System.out.println("(Identifier," + identifier.getName() + "_" + identifier.getIndex() + ")");
         else
             System.out.print(identifier);
         return null;

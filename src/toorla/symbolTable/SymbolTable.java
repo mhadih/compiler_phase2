@@ -16,7 +16,7 @@ public class SymbolTable {
     public static SymbolTable top;
     public static SymbolTable root;
 
-    private static Stack<SymbolTable> stack = new Stack<SymbolTable>();
+    private static Stack<SymbolTable> stack = new Stack<>();
 
     public static void push(SymbolTable symbolTable) {
         if (top != null)

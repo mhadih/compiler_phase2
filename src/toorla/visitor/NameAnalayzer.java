@@ -82,7 +82,25 @@ public class NameAnalayzer implements Visitor<Void> {
     @Override
     public Void visit(Conditional conditional) {
         conditional.getCondition().accept(this);
+        try {
+            ScopeSymbolTableItem newBlock = new ScopeSymbolTableItem("Block" + blockCnt);
+            blockCnt += 1;
+            SymbolTable.top.put(newBlock);
+            newBlock.symbolTable.setPreSymbolTable(SymbolTable.top);
+            SymbolTable.push(newBlock.symbolTable);
+        } catch (ItemAlreadyExistsException exception) {
+            // nothing
+        }
         conditional.getThenStatement().accept(this);
+        try {
+            ScopeSymbolTableItem newBlock = new ScopeSymbolTableItem("Block" + blockCnt);
+            blockCnt += 1;
+            SymbolTable.top.put(newBlock);
+            newBlock.symbolTable.setPreSymbolTable(SymbolTable.top);
+            SymbolTable.push(newBlock.symbolTable);
+        } catch (ItemAlreadyExistsException exception) {
+            // nothing
+        }
         conditional.getElseStatement().accept(this);
         return null;
     }
@@ -90,6 +108,15 @@ public class NameAnalayzer implements Visitor<Void> {
     @Override
     public Void visit(While whileStat) {
         whileStat.expr.accept(this);
+        try {
+            ScopeSymbolTableItem newBlock = new ScopeSymbolTableItem("Block" + blockCnt);
+            blockCnt += 1;
+            SymbolTable.top.put(newBlock);
+            newBlock.symbolTable.setPreSymbolTable(SymbolTable.top);
+            SymbolTable.push(newBlock.symbolTable);
+        } catch (ItemAlreadyExistsException exception) {
+            // nothing
+        }
         whileStat.body.accept(this);
         return null;
     }
@@ -300,19 +327,27 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(ClassDeclaration classDeclaration) {
-        try{
-            ClassSymbolTableItem newClass = new ClassSymbolTableItem(classDeclaration.getName().getName());
-            SymbolTable.top.put(newClass);
-            newClass.symbolTable.setPreSymbolTable(SymbolTable.top);
-            SymbolTable.push(newClass.symbolTable);
-
-        }
-        catch(ItemAlreadyExistsException exception){
-//            System.out.println("Error:Line:" + classDeclaration.line + ":Redefinition of Class " + classDeclaration.getName());
+        if (classDeclaration.getName().getName().equals("Any")) {
             Pair <Integer,String> err =
-                    new Pair<Integer,String>(classDeclaration.line,"Error:Line:" + classDeclaration.line + ":Redefinition of Class " + classDeclaration.getName());
+                    new Pair<>(classDeclaration.getName().line, "Error:line:" + classDeclaration.getName().line + ":Redefinition of Class Any");
             error.add(err);
             hasError = true;
+        }
+        else {
+            try{
+                ClassSymbolTableItem newClass = new ClassSymbolTableItem(classDeclaration.getName().getName());
+                SymbolTable.top.put(newClass);
+                newClass.symbolTable.setPreSymbolTable(SymbolTable.top);
+                SymbolTable.push(newClass.symbolTable);
+
+            }
+            catch(ItemAlreadyExistsException exception){
+//            System.out.println("Error:Line:" + classDeclaration.line + ":Redefinition of Class " + classDeclaration.getName());
+                Pair <Integer,String> err =
+                        new Pair<Integer,String>(classDeclaration.getName().line,"Error:Line:" + classDeclaration.getName().line + ":Redefinition of Class " + classDeclaration.getName().getName());
+                error.add(err);
+                hasError = true;
+            }
         }
         classDeclaration.getName().accept(this);
         if (classDeclaration.getParentName().getName() != null) {
@@ -326,21 +361,25 @@ public class NameAnalayzer implements Visitor<Void> {
 
     @Override
     public Void visit(EntryClassDeclaration entryClassDeclaration) {
-
-        try{
-            ClassSymbolTableItem newClass = new ClassSymbolTableItem(entryClassDeclaration.getName().getName());
-            SymbolTable.top.put(newClass);
-            newClass.symbolTable.setPreSymbolTable(SymbolTable.top);
-            SymbolTable.push(newClass.symbolTable);
-        }
-        catch(ItemAlreadyExistsException exception){
-//            System.out.println("Error:Line:" + entryClassDeclaration.line + ":Redefinition of Class " + entryClassDeclaration.getName());
+        if (entryClassDeclaration.getName().getName().equals("Any")) {
             Pair <Integer,String> err =
-                    new Pair<Integer,String>(entryClassDeclaration.line,"Error:Line:" + entryClassDeclaration.line + ":Redefinition of Class " + entryClassDeclaration.getName());
+                    new Pair<>(entryClassDeclaration.getName().line, "Error:line:" + entryClassDeclaration.getName().line + ":Redefinition of Class Any");
             error.add(err);
             hasError = true;
         }
-
+        else {
+            try {
+                ClassSymbolTableItem newClass = new ClassSymbolTableItem(entryClassDeclaration.getName().getName());
+                SymbolTable.top.put(newClass);
+                newClass.symbolTable.setPreSymbolTable(SymbolTable.top);
+                SymbolTable.push(newClass.symbolTable);
+            } catch (ItemAlreadyExistsException exception) {
+                Pair<Integer, String> err =
+                        new Pair<>(entryClassDeclaration.getName().line, "Error:Line:" + entryClassDeclaration.getName().line + ":Redefinition of Class " + entryClassDeclaration.getName().getName());
+                error.add(err);
+                hasError = true;
+            }
+        }
         entryClassDeclaration.getName().accept(this);
         if (entryClassDeclaration.getParentName().getName() != null) {
             entryClassDeclaration.getParentName().accept(this);
@@ -355,18 +394,17 @@ public class NameAnalayzer implements Visitor<Void> {
     public Void visit(FieldDeclaration fieldDeclaration) {
         if (fieldDeclaration.getIdentifier().getName().equals("length")) {
             Pair <Integer,String> err =
-                    new Pair<>(fieldDeclaration.line, "Error:line:" + fieldDeclaration.line + ":Definition of length as field of a class");
+                    new Pair<>(fieldDeclaration.getIdentifier().line, "Error:line:" + fieldDeclaration.getIdentifier().line + ":Definition of length as field of a class");
             error.add(err);
             hasError = true;
         }
         else {
             try {
-                FieldSymbolTableItem field = new FieldSymbolTableItem(fieldDeclaration.getIdentifier().getName(), fieldDeclaration.getType());
+                FieldSymbolTableItem field = new FieldSymbolTableItem("F_" + fieldDeclaration.getIdentifier().getName(), fieldDeclaration.getType());
                 SymbolTable.top.put(field);
             } catch (ItemAlreadyExistsException exception) {
-//                System.out.println("Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
                 Pair <Integer,String> err =
-                        new Pair<>(fieldDeclaration.line, "Error:Line:" + fieldDeclaration.line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
+                        new Pair<>(fieldDeclaration.getIdentifier().line, "Error:Line:" + fieldDeclaration.getIdentifier().line + ":Redefinition of Field " + fieldDeclaration.getIdentifier().getName());
                 error.add(err);
                 hasError = true;
             }
@@ -384,9 +422,8 @@ public class NameAnalayzer implements Visitor<Void> {
             counter +=1;
         }
         catch(ItemAlreadyExistsException exception) {
-//            System.out.println("Error:Line:" + parameterDeclaration.line + ":Redefinition of Local Variable" +  parameterDeclaration.getIdentifier().getName() + "in current scope");
             Pair <Integer,String> err =
-                    new Pair<Integer,String>(parameterDeclaration.line,"Error:Line:" + parameterDeclaration.line + ":Redefinition of Local Variable" +  parameterDeclaration.getIdentifier().getName() + "in current scope");
+                    new Pair<Integer,String>(parameterDeclaration.getIdentifier().line,"Error:Line:" + parameterDeclaration.getIdentifier().line + ":Redefinition of Local Variable" +  parameterDeclaration.getIdentifier().getName() + "in current scope");
             error.add(err);
             hasError = true;
         }
@@ -403,13 +440,13 @@ public class NameAnalayzer implements Visitor<Void> {
             paramType.add(pd.getType());
         }
         try {
-            MethodSymbolTableItem method = new MethodSymbolTableItem(methodDeclaration.getName().getName(), methodDeclaration.getReturnType(), paramType);
+            MethodSymbolTableItem method = new MethodSymbolTableItem("M_" + methodDeclaration.getName().getName(), methodDeclaration.getReturnType(), paramType);
             SymbolTable.top.put(method);
             method.symbolTable.setPreSymbolTable(SymbolTable.top);
             SymbolTable.push(method.symbolTable);
         } catch (ItemAlreadyExistsException exception) {
             Pair <Integer,String> err =
-                    new Pair<Integer,String>(methodDeclaration.line,"Error:Line:" + methodDeclaration.line + ":Redefinition of method " + methodDeclaration.getName().getName());
+                    new Pair<>(methodDeclaration.getName().line, "Error:Line:" + methodDeclaration.getName().line + ":Redefinition of method " + methodDeclaration.getName().getName());
             error.add(err);
             hasError = true;
         }

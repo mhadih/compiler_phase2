@@ -20,7 +20,7 @@ public class ToorlaCompiler {
         Program toorlaASTCode = toorlaParser.program().mProgram;
         NameAnalayzer nameAnalayzer = new NameAnalayzer(error);
         toorlaASTCode.accept( nameAnalayzer);
-        InheritCheck inheritCheck = new InheritCheck(nameAnalayzer.symbolTable, error);
+        InheritCheck inheritCheck = new InheritCheck(error);
         inheritCheck.check(toorlaASTCode);
         error.sort(Comparator.comparing(Pair::getKey));
         for (Pair<Integer, String> itٍError: error)

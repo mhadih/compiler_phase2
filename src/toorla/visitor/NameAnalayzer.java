@@ -499,7 +499,6 @@ public class NameAnalayzer implements Visitor<Void> {
         parameterDeclaration.getIdentifier().accept(this);
         return null;
     }
-
     @Override
     public Void visit(MethodDeclaration methodDeclaration) {
         methodDeclaration.getName().accept(this);

@@ -66,9 +66,9 @@ public class InheritCheck {
                     }
                     if (memberChild instanceof MethodDeclaration) {
                         MethodDeclaration method = (MethodDeclaration)memberChild;
-                        if (memberPar instanceof MethodDeclaration && method.getName().getName().equals(getClassMemberName(memberPar)) && !uniqueField.contains(method.getName().getName())) {
+                        if (memberPar instanceof MethodDeclaration && method.getName().getName().equals(getClassMemberName(memberPar)) && !uniqueMethod.contains(method.getName().getName())) {
                             Pair<Integer, String> err =
-                                    new Pair<>(method.getName().line, "Error:Line:" + method.getName().line + ":Redefinition of method " + method.getName().getName());
+                                    new Pair<>(method.getName().line, "Error:Line:" + method.getName().line + ":Redefinition of Method " + method.getName().getName());
                             error.add(err);
                             hasError = true;
                             uniqueMethod.add(method.getName().getName());
@@ -86,13 +86,13 @@ public class InheritCheck {
             if (itrClass.getParentName().getName() != null)
             {
                 parent.put(itrClass.getName().getName(), itrClass.getParentName().getName());
-//                System.out.println(itrClass.getParentName().getName());
             }
     }
 
     public void check(Program toorlaASTCode) {
         for (ClassDeclaration itrClass : toorlaASTCode.getClasses())
-            classNameMap.put(itrClass.getName().getName(), itrClass);
+            if ( !classNameMap.containsKey(itrClass.getName().getName()) )
+                classNameMap.put(itrClass.getName().getName(), itrClass);
         addEdge(toorlaASTCode);
         for (ClassDeclaration itrClass : toorlaASTCode.getClasses())
             getParentPath(itrClass.getName().getName());

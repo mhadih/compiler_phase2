@@ -8,10 +8,6 @@ entry class A inherits B:
 end
 
 class B:
-    field b int;
-end
-
-class B:
     public field a int;
     public function b() returns int:
     end
@@ -19,4 +15,8 @@ class B:
         var d = 1;
         var d = 1;
     end
+end
+
+class Br:
+    field b int;
 end

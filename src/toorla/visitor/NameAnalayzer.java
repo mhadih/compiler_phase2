@@ -304,9 +304,8 @@ public class NameAnalayzer implements Visitor<Void> {
                 localVarDef.getLocalVarName().setIndex(counter);
                 counter += 1;
             } catch (ItemAlreadyExistsException exception) {
-                //            System.out.println("Error:Line:" + localVarDef.line + ":Redefinition of Local Variable " +  localVarDef.getLocalVarName().getName() + " in current scope");
                 Pair<Integer, String> err =
-                        new Pair<Integer, String>(localVarDef.line, "Error:Line:" + localVarDef.line + ":Redefinition of Local Variable " + localVarDef.getLocalVarName().getName() + " in current scope");
+                        new Pair<>(localVarDef.line, "Error:Line:" + localVarDef.line + ":Redefinition of Local Variable " + localVarDef.getLocalVarName().getName() + " in current scope");
                 error.add(err);
                 hasError = true;
                 LocalVariableSymbolTableItem variable = new LocalVariableSymbolTableItem(unique + localVarDef.getLocalVarName().getName());
@@ -362,7 +361,6 @@ public class NameAnalayzer implements Visitor<Void> {
                     SymbolTable.push(newClass.symbolTable);
 
                 } catch (ItemAlreadyExistsException exception) {
-                    //            System.out.println("Error:Line:" + classDeclaration.line + ":Redefinition of Class " + classDeclaration.getName());
                     Pair<Integer, String> err =
                             new Pair<Integer, String>(classDeclaration.getName().line, "Error:Line:" + classDeclaration.getName().line + ":Redefinition of Class " + classDeclaration.getName().getName());
                     error.add(err);
@@ -515,7 +513,7 @@ public class NameAnalayzer implements Visitor<Void> {
                 SymbolTable.push(method.symbolTable);
             } catch (ItemAlreadyExistsException exception) {
                 Pair<Integer, String> err =
-                        new Pair<>(methodDeclaration.getName().line, "Error:Line:" + methodDeclaration.getName().line + ":Redefinition of method " + methodDeclaration.getName().getName());
+                        new Pair<>(methodDeclaration.getName().line, "Error:Line:" + methodDeclaration.getName().line + ":Redefinition of Method " + methodDeclaration.getName().getName());
                 error.add(err);
                 hasError = true;
                 MethodSymbolTableItem method = new MethodSymbolTableItem(unique + "M_" + methodDeclaration.getName().getName(), methodDeclaration.getReturnType(), paramType);

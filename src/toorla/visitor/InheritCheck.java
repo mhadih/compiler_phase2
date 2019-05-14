@@ -52,11 +52,14 @@ public class InheritCheck {
         while (!par.equals(str)) {
             if (!classNameMap.containsKey(par))
                 return;
+            if (classNameMap.get(par).getName().getName().equals("Any"))
+                return;
             for (ClassMemberDeclaration memberChild : classNameMap.get(str).getClassMembers())
                 for (ClassMemberDeclaration memberPar: classNameMap.get(par).getClassMembers()) {
                     if (memberChild instanceof FieldDeclaration) {
                         FieldDeclaration field = (FieldDeclaration)memberChild;
-                        if (memberPar instanceof  FieldDeclaration && field.getIdentifier().getName().equals(getClassMemberName(memberPar)) && !uniqueField.contains(field.getIdentifier().getName())) {
+                        if (memberPar instanceof  FieldDeclaration && field.getIdentifier().getName().equals(getClassMemberName(memberPar)) &&
+                                !uniqueField.contains(field.getIdentifier().getName()) && !field.getIdentifier().getName().equals("length")) {
                             Pair<Integer,String> err =
                                     new Pair<>(field.getIdentifier().line, "Error:Line:" + field.getIdentifier().line + ":Redefinition of Field " + field.getIdentifier().getName());
                             error.add(err);

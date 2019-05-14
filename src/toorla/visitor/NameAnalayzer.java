@@ -94,6 +94,7 @@ public class NameAnalayzer implements Visitor<Void> {
             // nothing
         }
         conditional.getThenStatement().accept(this);
+        symbolTable.pop();
         try {
             ScopeSymbolTableItem newBlock = new ScopeSymbolTableItem("Block" + blockCnt);
             blockCnt += 1;
@@ -104,6 +105,7 @@ public class NameAnalayzer implements Visitor<Void> {
             // nothing
         }
         conditional.getElseStatement().accept(this);
+        symbolTable.pop();
         return null;
     }
 
@@ -120,6 +122,7 @@ public class NameAnalayzer implements Visitor<Void> {
             // nothing
         }
         whileStat.body.accept(this);
+        symbolTable.pop();
         return null;
     }
 
@@ -443,12 +446,6 @@ public class NameAnalayzer implements Visitor<Void> {
                     new Pair<>(fieldDeclaration.getIdentifier().line, "Error:Line:" + fieldDeclaration.getIdentifier().line + ":Definition of length as field of a class");
             error.add(err);
             hasError = true;
-//                FieldSymbolTableItem field = new FieldSymbolTableItem(unique + "F_" + fieldDeclaration.getIdentifier().getName(), fieldDeclaration.getType());
-//                SymbolTable.top.put(field);
-//                unique += 1;
-//            }catch(ItemAlreadyExistsException exc) {
-//
-//            }
         }
 
         else {
@@ -518,8 +515,6 @@ public class NameAnalayzer implements Visitor<Void> {
                 hasError = true;
                 MethodSymbolTableItem method = new MethodSymbolTableItem(unique + "M_" + methodDeclaration.getName().getName(), methodDeclaration.getReturnType(), paramType);
                 SymbolTable.top.put(method);
-                System.out.println(unique + "F_" + methodDeclaration.getName().getName());
-                System.out.println(methodDeclaration.getName().line);
                 unique += 1;
                 method.symbolTable.setPreSymbolTable(SymbolTable.top);
                 SymbolTable.push(method.symbolTable);

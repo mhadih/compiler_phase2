@@ -438,17 +438,17 @@ public class NameAnalayzer implements Visitor<Void> {
     public Void visit(FieldDeclaration fieldDeclaration) {
 
         if (fieldDeclaration.getIdentifier().getName().equals("length")) {
-            try {
-                Pair<Integer, String> err =
-                        new Pair<>(fieldDeclaration.getIdentifier().line, "Error:Line:" + fieldDeclaration.getIdentifier().line + ":Definition of length as field of a class");
-                error.add(err);
-                hasError = true;
-                FieldSymbolTableItem field = new FieldSymbolTableItem(unique + "F_" + fieldDeclaration.getIdentifier().getName(), fieldDeclaration.getType());
-                SymbolTable.top.put(field);
-                unique += 1;
-            }catch(ItemAlreadyExistsException exc) {
-
-            }
+//            try {
+            Pair<Integer, String> err =
+                    new Pair<>(fieldDeclaration.getIdentifier().line, "Error:Line:" + fieldDeclaration.getIdentifier().line + ":Definition of length as field of a class");
+            error.add(err);
+            hasError = true;
+//                FieldSymbolTableItem field = new FieldSymbolTableItem(unique + "F_" + fieldDeclaration.getIdentifier().getName(), fieldDeclaration.getType());
+//                SymbolTable.top.put(field);
+//                unique += 1;
+//            }catch(ItemAlreadyExistsException exc) {
+//
+//            }
         }
 
         else {
